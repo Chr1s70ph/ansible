@@ -8,4 +8,3 @@
     user: "root"
     key: "{{ admin_keys | join('\n') }}"
     state: "present"
-    exclusive: True

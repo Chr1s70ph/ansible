@@ -2,9 +2,12 @@
 all:
   children:
     vms:
+      hosts:
     servers:
-      raspberry
-      ubuntuserver
+      hosts:
+        raspberry:
+        ubuntuserver:
     desktops:
-      manjaro
-      manjaro-xps
+      hosts:
+        manjaro:
+        manjaro-xps:
