@@ -1,0 +1,11 @@
+---
+- ansible.builtin.set_fact:
+    admin_keys: "{{ admin_keys | default([]) | union( ssh_keys[item].values() | list ) | sort }}"
+  loop: "{{ admins }}"
+
+- name: Add authorized_keys for root-user
+  ansible.posix.authorized_key:
+    user: "root"
+    key: "{{ admin_keys | join('\n') }}"
+    state: "present"
+    exclusive: True

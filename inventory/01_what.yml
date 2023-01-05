@@ -1,0 +1,10 @@
+---
+all:
+  children:
+    vms:
+    servers:
+      raspberry
+      ubuntuserver
+    desktops:
+      manjaro
+      manjaro-xps
