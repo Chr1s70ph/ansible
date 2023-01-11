@@ -7,6 +7,7 @@ all:
       hosts:
         raspberry:
         ubuntuserver:
+        localhost:
     desktops:
       hosts:
         manjaro:
