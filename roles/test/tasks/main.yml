@@ -1,5 +1,0 @@
----
-- name: Get secret from bitwarden
-  debug:
-    msg: >-
-      {{ lookup('rbw', 'qt') }}
