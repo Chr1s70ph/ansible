@@ -1,0 +1,29 @@
+---
+- name: debug
+  debug:
+    msg: "{{ ansible_os_family | lower }}"
+
+
+- name: Set OS dependent variables
+  include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "{{ ansible_distribution | lower }}_{{ ansible_distribution_version | lower }}.yml"
+        - "{{ ansible_distribution | lower }}_{{ ansible_distribution_major_version | lower }}.yml"
+        - "{{ ansible_distribution | lower }}.yml"
+        - "{{ ansible_os_family | lower }}.yml"
+        - "{{ ansible_system | lower }}.yml"
+      paths:
+        - "{{ role_path }}/vars"
+  ignore_errors: True
+
+- name: OS is supported
+  assert:
+    that: __os_supported
+    quiet: True
+  vars:
+    __os_supported: "{{ lookup('vars', '{}_os_supported'.format(role_name)) | bool }}"
+
+- name: Include OS-specific tasks.
+  include_tasks: "{{ ansible_os_family | lower }}.yml"

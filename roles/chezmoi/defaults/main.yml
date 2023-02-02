@@ -1,0 +1,11 @@
+---
+chezmoi_os_supported: False
+
+chezmoi_required_packages:
+  - chezmoi
+  - github-cli
+
+chezmoi_user: christoph
+chezmoi_user_home: "/home/{{ chezmoi_user }}"
+
+chezmoi_github_token: "{{ lookup('rbw', 'Github Ansible Token') }}"

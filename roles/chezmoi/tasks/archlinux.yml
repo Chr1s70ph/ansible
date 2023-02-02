@@ -1,0 +1,41 @@
+---
+- name: Install required packages
+  pacman: 
+    name: "{{ chezmoi_required_packages }}"
+    state: present
+
+- name: Install chezmoi config
+  template:
+    src: chezmoi.toml.j2
+    dest: "/home/{{ chezmoi_user }}/.config/chezmoi/chezmoi.toml"
+
+- name: Install github token
+  template:
+    src: github_token.txt.j2
+    dest: "{{ chezmoi_user_home }}/github_token.txt"
+
+- name: Read gh-cli hosts config
+  command:
+    cmd: "cat {{ chezmoi_user_home }}/.config/gh/hosts.yml"
+  register: chezmoi_gh_hosts_config
+
+- name: Log into gh-cli
+  shell: "gh auth login --with-token < {{ chezmoi_user_home }}/github_token.txt; cat {{ chezmoi_user_home }}/.config/gh/hosts.yml"
+  become: true
+  become_user: "{{ chezmoi_user }}"
+  register: chezmoi_gh_hosts_config_updated
+  changed_when: chezmoi_gh_hosts_config_updated.stdout != chezmoi_gh_hosts_config.stdout
+
+- name: Clone chezmoi repository
+  git:
+    repo: "git@github.com:Chr1s70ph/dotfiles.git"
+    version: master
+    dest: "/home/{{ chezmoi_user }}/.local/share/chezmoi"
+  become: true
+  become_user: "{{ chezmoi_user }}"
+
+- name: Init chezmoi
+  command:
+    cmd: "chezmoi init --apply"
+  become: true
+  become_user: "{{ chezmoi_user }}"
